@@ -1,0 +1,22 @@
+<ion-menu [content]="content">
+    <ion-toolbar>
+        <ion-title>
+            Hoşgeldiniz !
+        </ion-title>
+    </ion-toolbar>
+    <ion-content>
+        <ion-list>
+            <button (click)="openPage(p)" *ngFor="let p of pages" ion-item="" menuClose="">
+                {{p.title}}
+            </button>
+        </ion-list>
+    </ion-content>
+    <div class="bar bar-footer bar-stable">
+	  	<div class="row col text-center">
+			Author - Avare Kodcu
+		</div>
+	</div>
+</ion-menu>
+<!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+<ion-nav #content="" [root]="rootPage" swipeBackEnabled="false">
+</ion-nav>

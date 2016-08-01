@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-navbar> 
+        <button menuToggle="">
+            <ion-icon name="menu">
+            </ion-icon>
+        </button>
+        <ion-title>
+            Takvim
+        </ion-title>
+        <ion-buttons end>
+            <button (click)="addTodo()">
+                <ion-icon name="calendar">
+                </ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content class="main" padding="">
+    
+    <ion-item *ngFor="let item of Activites" (click)="optionTodo(item)">
+        <h2>{{item.name}} <span light>{{item.date | date:'dd MMM yy'}}</span></h2>
+        <p>{{item.description}}</p>
+    </ion-item>
+
+</ion-content>

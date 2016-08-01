@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar no-border-top>
+        <ion-buttons left>
+            <button (click)="dismiss()" danger>
+                <span>Vazgeç</span>
+                <ion-icon name="md-close"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-buttons right>
+            <button (click)="addTodo()" secondary>
+                <span>Kaydet</span>
+                <ion-icon name="md-add-circle"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-title> Yeni Aktivite </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label floating>Ne Zaman ?</ion-label>
+            <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="newTodo.date"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+            <ion-label floating>Ektinlik ne ? *</ion-label>
+            <ion-input type="text" [(ngModel)]="newTodo.name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label floating>Açıklama</ion-label>
+            <ion-textarea type="text" [(ngModel)]="newTodo.description"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+            <ion-label floating>Etiketler</ion-label>
+            <ion-input type="text" [(ngModel)]="newTodo.tags"></ion-input>
+        </ion-item>
+
+    </ion-list>
+</ion-content>
