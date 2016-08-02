@@ -9,21 +9,26 @@
         </ion-title>
     </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content padding>
+    <ion-grid>
+        <div class="col item item-text-wrap">
+            <ion-row>
+                <ion-col>
+                    <div>Oluşturulmuş Tüm Aktiviteler</div>
+                    <ion-badge balanced>{{Activites.length}}</ion-badge>
+                </ion-col>
+                <ion-col>
+                    <div>Silinmiş Tüm Aktiviteler</div>
+                    <ion-badge balanced>{{deleteActiviytCount}}</ion-badge>
+                </ion-col>
+            </ion-row>
+        </div>
+    </ion-grid>
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
     <ion-list>
-        <button (click)="itemTapped($event, item)" *ngFor="let item of items" ion-item="">
-            <ion-icon [name]="item.icon" item-left="">
-            </ion-icon>
-            {{item.title}}
-            <div class="item-note" item-right="">
-                {{item.note}}
-            </div>
-        </button>
+        <ion-item *ngFor="let item of Activites" (click)="optionTodo(item)">
+            <h2>{{item.name}} <span light>{{item.date | date:'dd MMM yy'}}</span></h2>
+            <p>{{item.description}}</p>
+        </ion-item>
     </ion-list>
-    <div *ngIf="selectedItem" padding="">
-        You navigated here from
-        <b>
-            {{selectedItem.title}}
-        </b>
-    </div>
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Loading, NavController, Modal, Platform, NavParams, ViewController, ActionSheet, Alert } from 'ionic-angular';
+import { Loading, NavController, Modal, Platform, NavParams, ViewController, ActionSheet, Alert, Toast } from 'ionic-angular';
 
 import { ActivityService } from '../../services/ActivityService';
 
@@ -8,17 +8,25 @@ import { ActivityService } from '../../services/ActivityService';
 })
 export class Main {
 	public Activites = [];
-	public nav;
-  	constructor(public navCtrl: NavController) {
+
+  	constructor(public nav: NavController) {
   		ActivityService.getAllTodo().then(response => {
   			this.Activites = response.res.rows;
   		});
-  		this.nav = navCtrl;
   	}
 
   	public addTodo(){
   		let profileModal = Modal.create(ModalsContentPage, { charNum: 0 });
+  		profileModal.onDismiss(() => {
+  			this.refleshList();
+  		})
 	   	this.nav.present(profileModal);
+  	}
+
+  	refleshList(){
+  		ActivityService.getAllTodo().then(response => {
+  			this.Activites = response.res.rows;
+  		});
   	}
 
   	optionTodo(val){
@@ -44,9 +52,7 @@ export class Main {
 								        text: 'Evet',
 								        handler: () => {
 								        	ActivityService.deleteTodo(val.id);
-								        	ActivityService.getAllTodo().then(response => {
-									  			this.Activites = response.res.rows;
-									  		});
+								        	this.refleshList();
 								        }
 							      	}
 							    ]
@@ -58,7 +64,7 @@ export class Main {
 		      	{
 			        text: 'Düzenle',
 			        handler: () => {
-			        	let deleteOption = options	.dismiss();
+			        	let deleteOption = options.dismiss();
 			        	deleteOption.then(() => {
 				        	ActivityService.getUserList("id = ?", [val.id]).then(response => {
 					        	let updateAlert = Alert.create({
@@ -99,9 +105,7 @@ export class Main {
 					        				handler: data => {
 				        						data.id = response.res.rows[0].id;
 					        					ActivityService.updateTodo(data).then(() => {
-					        						ActivityService.getAllTodo().then(response => {
-											  			this.Activites = response.res.rows;
-											  		});
+					        						this.refleshList();
 					        					});
 					        				}
 					        			}
@@ -140,21 +144,24 @@ class ModalsContentPage {
 
   	addTodo() {
   		if (this.newTodo.name == "" || this.newTodo.date == "") {
-  			return ;
+  			let alert = Toast.create({
+				message: "Boş Bırakma Len ;)",
+				duration: 1000,
+				position: "top"
+			});
+			this.nav.present(alert);
   		} else {
 			let alert = Loading.create({
 				content: "Yükleniyor",
 				spinner:"circles",
 			});
 			this.nav.present(alert);
-	  		let result = ActivityService.addTodo(this.newTodo);
-	  		if(result) {
-				setTimeout(function () {
-					alert.dismiss();
-				}, 100);
-	  		} else {
-	  			
-	  		}
+	  		ActivityService.addTodo(this.newTodo).then(() => {
+				let deleteAlert = alert.dismiss();
+				deleteAlert.then(() =>  {
+			    	this.viewCtrl.dismiss();
+				});
+	  		});
   		}
   	}
 }

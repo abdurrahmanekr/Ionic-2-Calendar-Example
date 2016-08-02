@@ -48,4 +48,10 @@ export class ActivityService
   		}	
   	}
 
+  	static countTodoList(where:string, data){
+  		this.storage = new Storage(SqlStorage);
+  		let sql = "SELECT id AS count FROM Todo WHERE " + where;
+  		return this.storage.query(sql, data);
+  	}
+
 }
