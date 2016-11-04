@@ -7,11 +7,11 @@ import { ActivityService } from '../../services/ActivityService';
   	templateUrl: 'build/pages/main/main.html'
 })
 export class Main {
-	public Activites = [];
+	public Activites = null;
 
   	constructor(public nav: NavController) {
   		ActivityService.getAllTodo().then(response => {
-  			this.Activites = response.res.rows;
+  			this.Activites = response;
   		});
   	}
 
@@ -25,7 +25,7 @@ export class Main {
 
   	refleshList(){
   		ActivityService.getAllTodo().then(response => {
-  			this.Activites = response.res.rows;
+  			this.Activites = response;
   		});
   	}
 
@@ -66,7 +66,8 @@ export class Main {
 			        handler: () => {
 			        	let deleteOption = options.dismiss();
 			        	deleteOption.then(() => {
-				        	ActivityService.getUserList("id = ?", [val.id]).then(response => {
+				        	ActivityService.getUserList("id = ?", [val.id]).then((response: any) => {
+				        		response = response[0];
 					        	let updateAlert = Alert.create({
 					        		title: 'Düzenle',
 					        		inputs: [
@@ -74,25 +75,25 @@ export class Main {
 					        				type: 'date',
 					        				name: 'date',
 					        				placeholder: 'Tarih',
-					        				value: response.res.rows[0].date
+					        				value: response.date
 					        			},
 					        			{
 					        				type: 'text',
 						        			name: 'name',
 					        				placeholder: 'Etkinliğin ismi',
-					        				value: response.res.rows[0].name
+					        				value: response.name
 					        			},
 					        			{
 					        				type: 'text',
 					        				name: 'description',
 					        				placeholder: 'Açıklama',
-					        				value: response.res.rows[0].description
+					        				value: response.description
 					        			},
 					        			{
 					        				type: 'text',
 					        				name: 'tags',
 					        				placeholder: 'Etiketler',
-					        				value: response.res.rows[0].tags
+					        				value: response.tags
 					        			}
 					        		],
 					        		buttons: [
@@ -103,7 +104,7 @@ export class Main {
 					        			{
 					        				text: 'Kaydet',
 					        				handler: data => {
-				        						data.id = response.res.rows[0].id;
+				        						data.id = response.id;
 					        					ActivityService.updateTodo(data).then(() => {
 					        						this.refleshList();
 					        					});

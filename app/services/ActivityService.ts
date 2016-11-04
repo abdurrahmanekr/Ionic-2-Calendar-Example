@@ -1,34 +1,31 @@
-import { Storage, SqlStorage } from 'ionic-angular';
+import { SqlService } from './SqlService';
 
 export class ActivityService {
-    constructor() {}
+
+    constructor() { }
 
     static getAllTodo() {
-        let db = new Storage(SqlStorage);
-        return db.query("SELECT * FROM Todo");
+        return SqlService.select("Todo");
     }
 
-    static addTodo(data){
-        let db = new Storage(SqlStorage);
-        return db.query('INSERT INTO Todo(name, description, date, tags) VALUES (?, ?, ?, ?)', 
-                        [data.name, data.description, data.date, data.tags]);
+    static addTodo(data) {
+        return SqlService.insert("Todo", ["name", "description", "date", "tags"],
+            [data.name, data.description, data.date, data.tags]);
     }
 
-    static updateTodo(data){
-        let db = new Storage(SqlStorage);
-        return db.query('UPDATE Todo SET id = ?, name = ?, description = ?, date = ?, tags = ? WHERE id = ?',
-                        [data.name, data.description, data.date, data.tags, data.id]);
+    static updateTodo(data) {
+        return SqlService.update("Todo", ["name", "description", "date", "tags"],
+            [data.name, data.description, data.date, data.tags],
+            "id = ?",
+            [data.id]);
     }
 
-    static getUserList(where, data){
-        let db = new Storage(SqlStorage);
-        let sql = "SELECT * FROM Todo WHERE " + where;
-        return db.query(sql, data);
+    static getUserList(where, data) {
+        return SqlService.select("Todo", "*", where, data)
     }
 
-    static deleteTodo(id){
-        let db = new Storage(SqlStorage);
-        return db.query("DELETE FROM Todo WHERE id = " + id);
+    static deleteTodo(id) {
+        return SqlService.delete("Todo", "id = ?", [id]);
     }
 
 }
